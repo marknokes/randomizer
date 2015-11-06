@@ -6,7 +6,7 @@ class StatementRandomizer
 
 	public function __construct()
 	{
-		$this->num = isset( $_GET['num'] ) && is_numeric( $_GET['num'] ) ? $_GET['num'] : 1;
+		$this->num = (int)$_GET['num'];
 
 		$this->file_url = !empty( $_GET['fileUrl'] ) ? $_GET['fileUrl'] : false;
 
@@ -66,32 +66,31 @@ class StatementRandomizer
 
 	private function get_rand()
 	{
-
 		$return = array();
 
 		$array = explode( "\n", $this->contents );
 
-		$size = sizeof( $array );
+		$num_items = sizeof( $array );
 
-		// array_rand won't allow 1 as second arg
-		$selectnum = $this->num < 2 ? 2 : $this->num;
-
-		$rand = $size >= $selectnum ? array_rand( $array, (int)$selectnum ) : array_rand( $array, (int)$size );
-
-		foreach( $rand as $key => $array_key )
+		if ( $num_items === 1 || $this->num === 1 )
 		{
-			if ( !empty( $array[ $array_key ] ) )
-				$return[] = $this->process_shortcodes( $array[ $array_key ] );
+			$rand_key = rand( 0, $num_items - 1 );
+
+			$return[] = $this->process_shortcodes( $array[ $rand_key ] );
+		}
+		else
+		{
+			$rand = $this->num >= $num_items ? array_rand( $array, $num_items ) : array_rand( $array, $this->num );
+
+			foreach( $rand as $key => $array_key )
+			{
+				if ( !empty( $array[ $array_key ] ) )
+					$return[] = $this->process_shortcodes( $array[ $array_key ] );
+			}
 		}
 
-		if ( $this->num < 2 )
-			// $num is either empty or 1
-			return json_encode( $return[0] );
-		else
-			return json_encode( $return );
+		return json_encode( $return );
 	}
-
-	
 }
 
 $StatementRandomizer = new StatementRandomizer();

@@ -6,6 +6,9 @@ jQuery(document).ready(function($){
 
     $container.parents().find('head').append('<link rel="stylesheet" type="text/css" href="style.css">');
 
+    if ( "" === num || isNaN(num) )
+        num = 1;
+
     $.ajax({
         url: "ajax.php",
         data: {
