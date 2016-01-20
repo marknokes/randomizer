@@ -53,7 +53,7 @@ class StatementRandomizer
 		
 		$parts = explode( " ", $matches[1] );
 
-		$target = end( $parts ) === '_blank' ? array_pop( $parts ) : '';
+		$target = end( $parts ) === '_blank' ? array_pop( $parts ) : '_parent';
 
 		$link = array_pop( $parts );
 		
